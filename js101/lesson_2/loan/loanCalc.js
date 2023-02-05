@@ -1,6 +1,3 @@
-//ON NEW BRANCH TEST
-//Need to prevent allowing decimals
-
 const readline = require('readline-sync');
 const MESSAGES = require('./messages.json');
 
@@ -46,11 +43,7 @@ function newCalculationRequested() {
 }
 
 function getUserInput(loanItem, loanObj) {
-  const { 
-    item, 
-    message, 
-    requireWholeNumber
-  } = loanItem;
+  const { item, message, requireWholeNumber } = loanItem;
 
   let val = prompt(message);
 
@@ -115,5 +108,3 @@ do {
   console.log(`Monthly Loan Payment of: ${formatPayment(monthlyPayment)}`);
 
 } while (newCalculationRequested());
-
-//Questions - ok to recreate new objects (bad for memory, no?); is this getting too cute? 
