@@ -1,9 +1,10 @@
 {
     "welcome": "Welcome to the loan calculator!",
-    "invalid": "Entry must be a positive number.",
+    "invalid1": "Entry must be a positive number.",
+    "invalid2": "Entry must be a positive integer.",
     "loanDurationInYears": "Please enter the loan duration (in years)",
     "additionalMonthsForLoanDuration": "Please enter additional months for the loan duration",
     "anotherCalculation": "Would you like to calculate another payment? (y/n)",
-    "apr": "Please input the apr."
-
+    "apr": "Please input the apr.",
+    "loanAmount": "Please enter the loan amount."
 }
