@@ -7,15 +7,15 @@ function prompt(message) {
   return readline.question(`=> ${message}\n`);
 }
 
-function isInvalidValue(val, requireWholeNumber=false) {
+function isInvalidValue(val, requireWholeNumber = false) {
   return Number.isNaN(Number(val)) ||
-		val.trim() === '' ||
-		Number(val) < 0 ||
-    (requireWholeNumber ? !isWholeNumber(val) : false);
+  val.trim() === '' ||
+  Number(val) < 0 ||
+  (requireWholeNumber ? !isWholeNumber(val) : false);
 }
 
 function isWholeNumber(val) {
-	return val % 1 === 0
+  return val % 1 === 0;
 }
 
 function convertToMonthlyRate(rate) {
@@ -48,7 +48,10 @@ function getUserInput(loanItem, loanObj) {
   let val = prompt(message);
 
   while (isInvalidValue(val, requireWholeNumber)) {
-    let invalidMessage = requireWholeNumber ? MESSAGES.invalid2 : MESSAGES.invalid1
+    let invalidMessage = requireWholeNumber ?
+      MESSAGES.invalid2 :
+      MESSAGES.invalid1;
+
     val = prompt(invalidMessage);
   }
 
@@ -56,16 +59,16 @@ function getUserInput(loanItem, loanObj) {
 }
 
 function calculateMonthlyPayment(loan) {
-  const { 
+  const {
     loanAmount,
     monthlyInterestRate,
     loanDurationInMonths
   } = loan;
 
   return loanAmount *
-		(monthlyInterestRate /
-			(1 - Math.pow((1 + monthlyInterestRate), (-loanDurationInMonths)))
-		);
+  (monthlyInterestRate /
+  (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationInMonths)))
+  );
 }
 
 do {
