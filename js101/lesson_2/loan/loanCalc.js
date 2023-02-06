@@ -1,6 +1,3 @@
-// disallow Infinity & -0
-// ON BRANCH TEST
-
 const readline = require('readline-sync');
 const MESSAGES = require('./messages.json');
 
@@ -51,12 +48,11 @@ function isInvalidEqualsZero(val) {
   return Number(val) === 0;
 }
 
-function isInvalidValue(val, additionalValidators) {
+function isInvalidValue(val, additionalValidators = []) {
   let validators = [isInvalidStandard];
-  if (additionalValidators) {
-    for (let validator of additionalValidators) {
-      validators.push(validator);
-    }
+  
+  for (let validator of additionalValidators) {
+    validators.push(validator);
   }
 
   for (let isInvalid of validators) {
@@ -84,7 +80,7 @@ function formatPayment(pmt) {
 
 function newCalculationRequested() {
   let requestAnotherCalculation = prompt(MESSAGES.anotherCalculation).toLowerCase();
-  
+
   switch (requestAnotherCalculation) {
     case 'y':
     case 'yes':
