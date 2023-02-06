@@ -83,9 +83,8 @@ function formatPayment(pmt) {
 }
 
 function newCalculationRequested() {
-  let requestAnotherCalculation = prompt(MESSAGES.anotherCalculation);
-  requestAnotherCalculation = requestAnotherCalculation.toLowerCase();
-
+  let requestAnotherCalculation = prompt(MESSAGES.anotherCalculation).toLowerCase();
+  
   switch (requestAnotherCalculation) {
     case 'y':
     case 'yes':
