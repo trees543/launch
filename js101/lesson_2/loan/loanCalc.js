@@ -1,3 +1,6 @@
+// disallow Infinity & -0
+// clear console on new entry
+
 const readline = require('readline-sync');
 const MESSAGES = require('./messages.json');
 
