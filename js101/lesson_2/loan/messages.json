@@ -2,9 +2,11 @@
     "welcome": "Welcome to the loan calculator!",
     "invalid1": "Entry must be a positive number.",
     "invalid2": "Entry must be a positive integer.",
+    "loanDurationInvalid": "The loan duration must be greater than 0.",
     "loanDurationInYears": "Please enter the loan duration (in years)",
     "additionalMonthsForLoanDuration": "Please enter additional months for the loan duration",
     "anotherCalculation": "Would you like to calculate another payment? (y/n)",
+    "invalidDecision": "Please type 'y' or 'yes' for another calculation.  Otherwise type 'n' or 'no'.",
     "apr": "Please input the apr.",
     "loanAmount": "Please enter the loan amount."
 }

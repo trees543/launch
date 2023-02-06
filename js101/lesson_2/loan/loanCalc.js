@@ -1,24 +1,69 @@
 // disallow Infinity & -0
-// clear console on new entry
+// ON BRANCH TEST
 
 const readline = require('readline-sync');
 const MESSAGES = require('./messages.json');
 
-console.log(MESSAGES.welcome);
+const loanItems =   [
+  {
+    item: 'loanAmount',
+    message: MESSAGES.loanAmount,
+    invalidMessage: MESSAGES.invalid1,
+    additionalValidators: [isInvalidEqualsZero]
+  },
+  {
+    item: 'apr',
+    message: MESSAGES.apr,
+    invalidMessage: MESSAGES.invalid1,
+    additionalValidators: [isInvalidEqualsZero]
+  },
+  {
+    item: 'loanDurationInYears',
+    message: MESSAGES.loanDurationInYears,
+    invalidMessage: MESSAGES.invalid2,
+    additionalValidators: [isInvalidNotInteger]
+  },
+  {
+    item: 'additionalMonthsForLoanDuration',
+    message: MESSAGES.additionalMonthsForLoanDuration,
+    invalidMessage: MESSAGES.invalid2,
+    additionalValidators: [isInvalidNotInteger]
+  }
+];
 
 function prompt(message) {
   return readline.question(`=> ${message}\n`);
 }
 
-function isInvalidValue(val, requireWholeNumber = false) {
-  return Number.isNaN(Number(val)) ||
+function isInvalidStandard(val) {
+  let numericValue = Number(val);
+  return Number.isNaN(numericValue) ||
   val.trim() === '' ||
-  Number(val) < 0 ||
-  (requireWholeNumber ? !isWholeNumber(val) : false);
+  numericValue < 0 ||
+  numericValue === Infinity;
 }
 
-function isWholeNumber(val) {
-  return val % 1 === 0;
+function isInvalidNotInteger(val) {
+  return Number(val) % 1 !== 0;
+}
+
+function isInvalidEqualsZero(val) {
+  return Number(val) === 0;
+}
+
+function isInvalidValue(val, additionalValidators) {
+  let validators = [isInvalidStandard];
+  if (additionalValidators) {
+    for (let validator of additionalValidators) {
+      validators.push(validator);
+    }
+  }
+
+  for (let isInvalid of validators) {
+    if (isInvalid(val)) return true;
+  }
+
+  return false;
 }
 
 function convertToMonthlyRate(rate) {
@@ -39,22 +84,29 @@ function formatPayment(pmt) {
 
 function newCalculationRequested() {
   let requestAnotherCalculation = prompt(MESSAGES.anotherCalculation);
+  requestAnotherCalculation = requestAnotherCalculation.toLowerCase();
 
-  if (requestAnotherCalculation[0].toLowerCase() !== 'y') {
-    return false;
-  } else return true;
+  switch (requestAnotherCalculation) {
+    case 'y':
+    case 'yes':
+      console.clear();
+      return true;
+    case 'n':
+    case 'no':
+      console.clear();
+      return false;
+    default:
+      console.log(MESSAGES.invalidDecision);
+      return newCalculationRequested();
+  }
 }
 
 function getUserInput(loanItem, loanObj) {
-  const { item, message, requireWholeNumber } = loanItem;
+  const { item, message, invalidMessage, additionalValidators } = loanItem;
 
   let val = prompt(message);
 
-  while (isInvalidValue(val, requireWholeNumber)) {
-    let invalidMessage = requireWholeNumber ?
-      MESSAGES.invalid2 :
-      MESSAGES.invalid1;
-
+  while (isInvalidValue(val, additionalValidators)) {
     val = prompt(invalidMessage);
   }
 
@@ -74,40 +126,32 @@ function calculateMonthlyPayment(loan) {
   );
 }
 
+console.log(MESSAGES.welcome);
+
 do {
 
   const loan = {};
 
-  [
-    {
-      item: 'loanAmount',
-      message: MESSAGES.loanAmount,
-      requireWholeNumber: false
-    },
-    {
-      item: 'apr',
-      message: MESSAGES.apr,
-      requireWholeNumber: false
-    },
-    {
-      item: 'loanDurationInYears',
-      message: MESSAGES.loanDurationInYears,
-      requireWholeNumber: true
-    },
-    {
-      item: 'additionalMonthsForLoanDuration',
-      message: MESSAGES.additionalMonthsForLoanDuration,
-      requireWholeNumber: true
-    }
-  ].forEach(loanItem => {
+  loanItems.forEach(loanItem => {
     getUserInput(loanItem, loan);
   });
+
+  loan["loanDurationInMonths"] = convertFromYearsToMonths(loan.loanDurationInYears, loan.additionalMonthsForLoanDuration);
+
+  while (loan.loanDurationInMonths === 0) {
+
+    console.log(MESSAGES.loanDurationInvalid);
+
+    loanItems.slice(2).forEach(loanItem => {
+      getUserInput(loanItem, loan);
+    });
+
+    loan["loanDurationInMonths"] = convertFromYearsToMonths(loan.loanDurationInYears, loan.additionalMonthsForLoanDuration);
+  }
 
   loan["aprPercentage"] = convertFromNumberToPercentage(loan.apr);
 
   loan["monthlyInterestRate"] = convertToMonthlyRate(loan.aprPercentage);
-
-  loan["loanDurationInMonths"] = convertFromYearsToMonths(loan.loanDurationInYears, loan.additionalMonthsForLoanDuration);
 
   let monthlyPayment = calculateMonthlyPayment(loan);
 
