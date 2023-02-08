@@ -1,0 +1,6 @@
+{
+    "chooseRPS": "Your turn! Please choose one of the following: ",
+    "invalidChoice": "Oops... invalid selection.  Please choose one of the following: ",
+    "anotherGame": "Would you like to play again? y/n",
+    "invalidRequestForAnotherGame": "Please enter 'y' or 'n'."
+}
