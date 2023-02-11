@@ -11,12 +11,8 @@ function getUsersChoice(message) {
   return prompt(`${message}${MOVE_OPTIONS.join(' | ')}`);
 }
 
-function getRandomInt() {
-  return Math.floor(Math.random() * MOVE_OPTIONS.length);
-}
-
 function getCompChoice() {
-  let randomIndex = getRandomInt();
+  let randomIndex =  Math.floor(Math.random() * MOVE_OPTIONS.length);
   return MOVE_OPTIONS[randomIndex];
 }
 
@@ -53,10 +49,8 @@ function userWantsAnotherGame() {
 }
 
 function incrementScore(sb, winner) {
-  if (winner === 'user') {
-    sb.user++;
-  } else if (winner === 'computer') {
-    sb.computer++;
+  if (winner !== 'tie') {
+    sb[winner]++;
   }
 }
 
